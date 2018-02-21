@@ -17,7 +17,9 @@ const requestComplete = function(){
   const beers = JSON.parse(jsonString);
 
   loopThroughBeers(beers);
+  selectBeer(beers);
 }
+
 
 const loopThroughBeers = function(beers){
   beers.forEach(function(beer){
@@ -25,7 +27,42 @@ const loopThroughBeers = function(beers){
   })
 }
 
+
+const selectBeer = function(beers){
+
+  const beerDropDown = document.getElementById("beer-select");
+  const beerOption = document.createElement("option")
+  beerOption.innerText = "All";
+  beerDropDown.appendChild(beerOption);
+
+  beers.forEach(function(beer){
+    const beerOption = document.createElement("option")
+    beerOption.innerText = beer.name;
+    beerDropDown.appendChild(beerOption);
+  })
+
+  beerDropDown.addEventListener('change', function(){
+    const ul = document.getElementById("beers-list");
+    ul.innerHTML = "";
+
+    if (this.value === "All"){
+      loopThroughBeers(beers);
+    } else {
+      getBeer(this.value, beers);
+    }
+  });
+}
+
+const getBeer = function(beerName, beers){
+  beers.forEach(function(beer){
+    if (beer.name === beerName){
+      displayDetails(beer);
+    }
+  })
+}
+
 const displayDetails = function(beer){
+  console.log(beer);
   const ul = document.getElementById("beers-list");
   const name_li = document.createElement("li");
   name_li.innerText = beer.name;
@@ -36,16 +73,10 @@ const displayDetails = function(beer){
   image.height = 400;
 
   const ingredients = formIngredients(beer);
-  // const ingredients = document.createElement("ul");
-  // const hops = document.createElement("li");
-  // hops.innerText =
-
 
   ul.appendChild(name_li);
   ul.appendChild(image);
   ul.appendChild(ingredients);
-
-  // displayImage(beer);
 }
 
 const formIngredients = function(beer){
